@@ -16,6 +16,25 @@ asyncpg = "^0.29.0"
 pydantic-settings = "^2.1.0"
 
 
+[tool.poetry.group.dev.dependencies]
+black = "^24.1.1"
+mypy = "^1.8.0"
+isort = "^5.13.2"
+flake8 = "^7.0.0"
+
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+
+[tool.isort]
+line_length = 120
+multi_line_output = 3
+force_grid_wrap = 2
+indent = 4
+use_parentheses = true
+include_trailing_comma = true
+lines_after_imports = 2
+combine_as_imports = true
+skip = "migrations"
+sections = "FUTURE,STDLIB,THIRDPARTY,FIRSTPARTY,LOCALFOLDER"
