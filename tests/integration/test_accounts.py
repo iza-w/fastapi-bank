@@ -95,3 +95,26 @@ async def test_update_account__with_invalid_account_id_returns_not_found(
 
     assert response.status_code == status.HTTP_404_NOT_FOUND
     assert response.json() == {"detail": "Account 1 does not exist."}
+
+
+async def test_delete_account__deleted_successfully(app, async_client, async_session):
+    account = Account(name="Jenny")
+    async with async_session.begin():
+        async_session.add(account)
+
+    response = await async_client.delete(
+        app.url_path_for("delete_account", account_id=account.id)
+    )
+
+    assert response.status_code == status.HTTP_204_NO_CONTENT
+    assert response.content == b""
+    assert not await async_session.get(Account, account.id)
+
+
+async def test_delete_account__with_invalid_id_returns_not_found(app, async_client):
+    response = await async_client.delete(
+        app.url_path_for("delete_account", account_id=1)
+    )
+
+    assert response.status_code == status.HTTP_404_NOT_FOUND
+    assert response.json() == {"detail": "Account 1 does not exist."}
