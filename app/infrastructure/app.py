@@ -1,6 +1,11 @@
 from functools import partial
 
 from fastapi import FastAPI
+from fastapi.encoders import jsonable_encoder
+from fastapi.exceptions import RequestValidationError
+from starlette import status
+from starlette.requests import Request
+from starlette.responses import JSONResponse
 
 from app.domain.accounts.account_repository import IAccountRepository
 from app.infrastructure.database import get_session
@@ -25,5 +30,14 @@ def init_app():
 
     app.dependency_overrides[get_session] = get_session
     app.dependency_overrides[IAccountRepository] = partial(SQLAlchemyAccountRepository)
+
+    @app.exception_handler(RequestValidationError)
+    async def validation_exception_handler(
+        request: Request, exc: RequestValidationError
+    ):
+        return JSONResponse(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            content=jsonable_encoder({"detail": exc.errors(), "body": exc.body}),
+        )
 
     return app
