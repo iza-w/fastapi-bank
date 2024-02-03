@@ -11,9 +11,13 @@ from fastapi import (
 )
 
 from app.application.commands.create_account import CreateAccountCommand
+from app.application.commands.update_account import UpdateAccountCommand
 from app.application.queries.get_account_list import GetAccountListQuery
 from app.domain.accounts.schema import AccountSchema
-from app.presentation.schema.account import AccountCreateSchema
+from app.presentation.schema.account import (
+    AccountCreateSchema,
+    AccountUpdateSchema,
+)
 
 
 router = APIRouter()
@@ -32,3 +36,12 @@ async def create_account(
     create_account_command: Annotated[Callable, Depends(CreateAccountCommand)],
 ) -> AccountSchema:
     return await create_account_command(account_data)
+
+
+@router.patch("/{account_id}/", status_code=status.HTTP_200_OK)
+async def update_account(
+    account_id: int,
+    account_data: AccountUpdateSchema,
+    update_account_command: Annotated[Callable, Depends(UpdateAccountCommand)],
+) -> AccountSchema:
+    return await update_account_command(account_id, account_data)
