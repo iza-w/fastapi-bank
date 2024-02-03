@@ -13,9 +13,11 @@ from fastapi import (
 from app.application.commands.create_account import CreateAccountCommand
 from app.application.commands.delete_account import DeleteAccountCommand
 from app.application.commands.update_account import UpdateAccountCommand
+from app.application.queries.get_account import GetAccountQuery
 from app.application.queries.get_account_list import GetAccountListQuery
 from app.domain.accounts.schema import AccountSchema
 from app.presentation.schema.account import (
+    AccountBalanceSchema,
     AccountCreateSchema,
     AccountUpdateSchema,
 )
@@ -54,3 +56,10 @@ async def delete_account(
     delete_account_command: Annotated[Callable, Depends(DeleteAccountCommand)],
 ) -> None:
     await delete_account_command(account_id)
+
+
+@router.get("/{account_id}/balance/", status_code=status.HTTP_200_OK)
+async def get_account_balance(
+    account_id: int, get_account_query: Annotated[Callable, Depends(GetAccountQuery)]
+) -> AccountBalanceSchema:
+    return await get_account_query(account_id)

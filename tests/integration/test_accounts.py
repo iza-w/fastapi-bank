@@ -1,3 +1,5 @@
+from decimal import Decimal
+
 from starlette import status
 
 from app.domain.accounts.account import Account
@@ -118,3 +120,22 @@ async def test_delete_account__with_invalid_id_returns_not_found(app, async_clie
 
     assert response.status_code == status.HTTP_404_NOT_FOUND
     assert response.json() == {"detail": "Account 1 does not exist."}
+
+
+async def test_account_balance__returns_expected_balance(
+    app, async_client, async_session
+):
+    account = Account(name="Jenny")
+    account.balance = Decimal("100.00")
+
+    async with async_session.begin():
+        async_session.add(account)
+
+    response = await async_client.get(
+        app.url_path_for("get_account_balance", account_id=account.id)
+    )
+
+    assert response.status_code == status.HTTP_200_OK
+    assert response.json() == {
+        "balance": "100.00",
+    }
