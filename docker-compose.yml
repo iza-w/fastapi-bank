@@ -1,0 +1,26 @@
+services:
+  db:
+    image: postgres:latest
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - .datastore:/var/lib/postgresql/data
+
+  api:
+    container_name: api
+    build:
+      context: .
+      dockerfile: deployment/Dockerfile
+    command: dev
+    ports:
+      - "8000:8000"
+    environment:
+      port: "8000"
+      host: "0.0.0.0"
+      database_url: "postgresql+asyncpg://postgres:postgres@db:5432/postgres"
+    volumes:
+      - .:/app
