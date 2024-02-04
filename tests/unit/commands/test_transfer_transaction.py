@@ -1,9 +1,10 @@
+from decimal import Decimal
+
 import pytest
 
 from app.application.commands.transfer_transaction import TransferTransactionCommand
 from app.domain.accounts.exceptions import InsufficientFoundsError
 from app.domain.transactions.schema import TransferTransactionSchema
-from decimal import Decimal
 
 
 async def test_transfer__transfers_between_accounts_and_returns_updated_accounts(

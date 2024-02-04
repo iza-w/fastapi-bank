@@ -1,0 +1,15 @@
+[run]
+source = .
+branch = false
+timid = false
+
+[report]
+show_missing = false
+fail_under = 95
+include = *.py
+omit =
+    main.py
+    test_*.py
+    conftest.py
+    logging_config.py
+    app/infrastructure/database.py
