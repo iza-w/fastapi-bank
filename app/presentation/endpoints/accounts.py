@@ -12,11 +12,13 @@ from fastapi import (
 
 from app.application.commands.create_account import CreateAccountCommand
 from app.application.commands.delete_account import DeleteAccountCommand
+from app.application.commands.deposit_transaction import CreateDepositTransactionCommand
 from app.application.commands.update_account import UpdateAccountCommand
 from app.application.queries.get_account import GetAccountQuery
 from app.application.queries.get_account_list import GetAccountListQuery
 from app.application.queries.get_account_transaction_list import GetAccountTransactionListQuery
 from app.domain.accounts.schema import AccountSchema
+from app.domain.transactions.schema import DepositTransactionSchema
 from app.presentation.schema.account import (
     AccountBalanceSchema,
     AccountCreateSchema,
@@ -75,3 +77,14 @@ async def get_account_transaction_list(
     ],
 ) -> List[AccountTransactionSchema]:
     return await get_transaction_list_query(account_id=account_id)
+
+
+@router.post("/{account_id}/deposit/", status_code=status.HTTP_200_OK)
+async def deposit_to_account(
+    account_id: int,
+    deposit_data: DepositTransactionSchema,
+    deposit_transaction_command: Annotated[
+        Callable, Depends(CreateDepositTransactionCommand)
+    ],
+) -> AccountSchema:
+    return await deposit_transaction_command(account_id, deposit_data)

@@ -21,9 +21,14 @@ def handle_exceptions(app: FastAPI):
     async def validation_exception_handler(
         request: Request, exc: RequestValidationError
     ):
+        def _get_validation_error(error):
+            error.pop("url", None)
+            return error
+
+        messages = [_get_validation_error(error) for error in exc.errors()]
         return JSONResponse(
             status_code=status.HTTP_400_BAD_REQUEST,
-            content=jsonable_encoder({"detail": exc.errors(), "body": exc.body}),
+            content=jsonable_encoder({"detail": messages}),
         )
 
     @app.exception_handler(AccountDoesNotExist)

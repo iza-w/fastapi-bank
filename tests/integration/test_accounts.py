@@ -44,7 +44,6 @@ async def test_create_account__with_invalid_data_returns_bad_request(app, async_
             "loc": ["body", "name"],
             "msg": "Field required",
             "input": {},
-            "url": "https://errors.pydantic.dev/2.6/v/missing",
         },
     ]
 
@@ -83,7 +82,6 @@ async def test_update_account__with_invalid_data_returns_bad_request(
             "loc": ["body", "name"],
             "msg": "Field required",
             "input": {},
-            "url": "https://errors.pydantic.dev/2.6/v/missing",
         },
     ]
 
