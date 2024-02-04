@@ -8,7 +8,10 @@ from starlette.requests import Request
 from starlette.responses import JSONResponse
 
 from app.domain.accounts.account_repository import IAccountRepository
-from app.domain.accounts.exceptions import AccountDoesNotExist
+from app.domain.accounts.exceptions import (
+    AccountDoesNotExist,
+    InsufficientFoundsError,
+)
 from app.domain.transactions.transaction_repository import ITransactionRepository
 from app.infrastructure.database import get_session
 from app.infrastructure.respositories.account_repository import SQLAlchemyAccountRepository
@@ -37,6 +40,15 @@ def handle_exceptions(app: FastAPI):
     ):
         return JSONResponse(
             status_code=status.HTTP_404_NOT_FOUND,
+            content=jsonable_encoder({"detail": str(exc)}),
+        )
+
+    @app.exception_handler(InsufficientFoundsError)
+    async def insufficient_founds_error_exception_handler(
+        request: Request, exc: InsufficientFoundsError
+    ):
+        return JSONResponse(
+            status_code=status.HTTP_400_BAD_REQUEST,
             content=jsonable_encoder({"detail": str(exc)}),
         )
 
