@@ -16,7 +16,7 @@ from app.domain.transactions.transaction_repository import ITransactionRepositor
 logger = logging.getLogger(__name__)
 
 
-class CreateTransferTransactionCommand:
+class TransferTransactionCommand:
     def __init__(
         self,
         account_repository: IAccountRepository = Depends(),
@@ -40,7 +40,7 @@ class CreateTransferTransactionCommand:
         to_account.balance += transfer_data.amount
 
         transaction = Transaction(
-            type=TransactionTypes.WITHDRAW,
+            type=TransactionTypes.TRANSFER,
             amount=transfer_data.amount,
             from_account_id=from_account.id,
             to_account_id=to_account.id,

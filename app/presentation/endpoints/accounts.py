@@ -13,7 +13,7 @@ from fastapi import (
 from app.application.commands.create_account import CreateAccountCommand
 from app.application.commands.delete_account import DeleteAccountCommand
 from app.application.commands.deposit_transaction import DepositTransactionCommand
-from app.application.commands.transfer_transaction import CreateTransferTransactionCommand
+from app.application.commands.transfer_transaction import TransferTransactionCommand
 from app.application.commands.update_account import UpdateAccountCommand
 from app.application.commands.withdraw_transaction import WithdrawTransactionCommand
 from app.application.queries.get_account import GetAccountQuery
@@ -112,7 +112,7 @@ async def transfer_between_accounts(
     account_id: int,
     transfer_data: TransferTransactionSchema,
     transfer_transaction_command: Annotated[
-        Callable, Depends(CreateTransferTransactionCommand)
+        Callable, Depends(TransferTransactionCommand)
     ],
 ) -> AccountSchema:
     return await transfer_transaction_command(account_id, transfer_data)
