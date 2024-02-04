@@ -15,7 +15,7 @@ from app.application.commands.delete_account import DeleteAccountCommand
 from app.application.commands.deposit_transaction import CreateDepositTransactionCommand
 from app.application.commands.transfer_transaction import CreateTransferTransactionCommand
 from app.application.commands.update_account import UpdateAccountCommand
-from app.application.commands.withdraw_transaction import CreateWithdrawTransactionCommand
+from app.application.commands.withdraw_transaction import WithdrawTransactionCommand
 from app.application.queries.get_account import GetAccountQuery
 from app.application.queries.get_account_list import GetAccountListQuery
 from app.application.queries.get_account_transaction_list import GetAccountTransactionListQuery
@@ -101,7 +101,7 @@ async def withdraw_from_account(
     account_id: int,
     withdraw_data: WithdrawTransactionSchema,
     withdraw_transaction_command: Annotated[
-        Callable, Depends(CreateWithdrawTransactionCommand)
+        Callable, Depends(WithdrawTransactionCommand)
     ],
 ) -> AccountSchema:
     return await withdraw_transaction_command(account_id, withdraw_data)

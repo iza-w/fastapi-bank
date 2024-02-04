@@ -26,6 +26,8 @@ async_engine = create_async_engine(SQLALCHEMY_DATABASE_URL, echo=True)
 
 pytestmark = pytest.mark.asyncio
 
+pytest_plugins = ["tests.fixtures"]
+
 
 @pytest_asyncio.fixture(scope="function", name="async_session")
 async def async_session_fixture() -> AsyncGenerator:
