@@ -12,7 +12,7 @@ from fastapi import (
 
 from app.application.commands.create_account import CreateAccountCommand
 from app.application.commands.delete_account import DeleteAccountCommand
-from app.application.commands.deposit_transaction import CreateDepositTransactionCommand
+from app.application.commands.deposit_transaction import DepositTransactionCommand
 from app.application.commands.transfer_transaction import CreateTransferTransactionCommand
 from app.application.commands.update_account import UpdateAccountCommand
 from app.application.commands.withdraw_transaction import WithdrawTransactionCommand
@@ -90,7 +90,7 @@ async def deposit_to_account(
     account_id: int,
     deposit_data: DepositTransactionSchema,
     deposit_transaction_command: Annotated[
-        Callable, Depends(CreateDepositTransactionCommand)
+        Callable, Depends(DepositTransactionCommand)
     ],
 ) -> AccountSchema:
     return await deposit_transaction_command(account_id, deposit_data)

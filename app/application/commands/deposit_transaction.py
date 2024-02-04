@@ -15,7 +15,7 @@ from app.domain.transactions.transaction_repository import ITransactionRepositor
 logger = logging.getLogger(__name__)
 
 
-class CreateDepositTransactionCommand:
+class DepositTransactionCommand:
     def __init__(
         self,
         account_repository: IAccountRepository = Depends(),
