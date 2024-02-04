@@ -17,6 +17,7 @@ from app.infrastructure.database import get_session
 from app.infrastructure.respositories.account_repository import SQLAlchemyAccountRepository
 from app.infrastructure.respositories.transaction_repository import SQLAlchemyTransactionRepository
 from app.presentation.endpoints.accounts import router as accounts_routes
+from app.presentation.endpoints.transactions import router as transactions_routes
 
 
 def handle_exceptions(app: FastAPI):
@@ -67,6 +68,7 @@ def init_app():
         return {"status": "ok"}
 
     app.include_router(accounts_routes, prefix="/accounts")
+    app.include_router(transactions_routes, prefix="/transactions")
 
     app.dependency_overrides[get_session] = get_session
     app.dependency_overrides[IAccountRepository] = partial(SQLAlchemyAccountRepository)
