@@ -137,3 +137,82 @@ async def test_withdraw_from_account__returns_expected_response(
 
     assert response.status_code == expected_status
     assert response.json() == expected_response
+
+
+async def test_transfer_between_accounts__returns_updated_accounts(
+    app, async_client, async_session
+):
+    account = Account(name="Jenny", balance=Decimal("100.00"))
+    account_2 = Account(name="Tom")
+
+    async with async_session.begin():
+        async_session.add(account)
+        async_session.add(account_2)
+
+    response = await async_client.post(
+        app.url_path_for("transfer_between_accounts", account_id=account.id),
+        json={"to_account_id": account_2.id, "amount": "50.00"},
+    )
+
+    assert response.status_code == status.HTTP_200_OK
+    assert response.json() == {
+        "id": 1,
+        "name": "Jenny",
+        "balance": "50.00",
+    }
+
+    # Check the balance of the account that received the transfer
+    response = await async_client.get(
+        app.url_path_for("get_account_balance", account_id=account_2.id)
+    )
+
+    assert response.status_code == status.HTTP_200_OK
+    assert response.json() == {
+        "balance": "50.00",
+    }
+
+
+async def test_transfer_between_accounts__returns_400_when_insufficient_funds(
+    app, async_client, async_session
+):
+    account = Account(name="Jenny", balance=Decimal("100.00"))
+    account_2 = Account(name="Tom")
+
+    async with async_session.begin():
+        async_session.add(account)
+        async_session.add(account_2)
+
+    response = await async_client.post(
+        app.url_path_for("transfer_between_accounts", account_id=account.id),
+        json={"to_account_id": account_2.id, "amount": "150.00"},
+    )
+
+    assert response.status_code == status.HTTP_400_BAD_REQUEST
+    assert response.json() == {
+        "detail": "Account 1 has insufficient funds to perform this operation."
+    }
+
+
+@pytest.mark.parametrize(
+    "from_account_id, to_account_id",
+    [
+        (1, 2),
+        (2, 1),
+        (2, 4),
+    ],
+)
+async def test_transfer_between_accounts__returns_404_when_account_does_not_exist(
+    app, async_client, async_session, from_account_id, to_account_id
+):
+    account = Account(id=1, name="Jenny")
+
+    async with async_session.begin():
+        async_session.add(account)
+
+    response = await async_client.post(
+        app.url_path_for("transfer_between_accounts", account_id=from_account_id),
+        json={"to_account_id": to_account_id, "amount": "100.00"},
+    )
+
+    assert response.status_code == status.HTTP_404_NOT_FOUND
+    assert response.json() == {"detail": "Account 2 does not exist."}

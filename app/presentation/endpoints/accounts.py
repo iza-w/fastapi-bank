@@ -13,6 +13,7 @@ from fastapi import (
 from app.application.commands.create_account import CreateAccountCommand
 from app.application.commands.delete_account import DeleteAccountCommand
 from app.application.commands.deposit_transaction import CreateDepositTransactionCommand
+from app.application.commands.transfer_transaction import CreateTransferTransactionCommand
 from app.application.commands.update_account import UpdateAccountCommand
 from app.application.commands.withdraw_transaction import CreateWithdrawTransactionCommand
 from app.application.queries.get_account import GetAccountQuery
@@ -21,6 +22,7 @@ from app.application.queries.get_account_transaction_list import GetAccountTrans
 from app.domain.accounts.schema import AccountSchema
 from app.domain.transactions.schema import (
     DepositTransactionSchema,
+    TransferTransactionSchema,
     WithdrawTransactionSchema,
 )
 from app.presentation.schema.account import (
@@ -103,3 +105,14 @@ async def withdraw_from_account(
     ],
 ) -> AccountSchema:
     return await withdraw_transaction_command(account_id, withdraw_data)
+
+
+@router.post("/{account_id}/transfer/", status_code=status.HTTP_200_OK)
+async def transfer_between_accounts(
+    account_id: int,
+    transfer_data: TransferTransactionSchema,
+    transfer_transaction_command: Annotated[
+        Callable, Depends(CreateTransferTransactionCommand)
+    ],
+) -> AccountSchema:
+    return await transfer_transaction_command(account_id, transfer_data)
