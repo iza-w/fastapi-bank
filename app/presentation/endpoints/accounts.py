@@ -15,12 +15,14 @@ from app.application.commands.delete_account import DeleteAccountCommand
 from app.application.commands.update_account import UpdateAccountCommand
 from app.application.queries.get_account import GetAccountQuery
 from app.application.queries.get_account_list import GetAccountListQuery
+from app.application.queries.get_account_transaction_list import GetAccountTransactionListQuery
 from app.domain.accounts.schema import AccountSchema
 from app.presentation.schema.account import (
     AccountBalanceSchema,
     AccountCreateSchema,
     AccountUpdateSchema,
 )
+from app.presentation.schema.transaction import AccountTransactionSchema
 
 
 router = APIRouter()
@@ -63,3 +65,13 @@ async def get_account_balance(
     account_id: int, get_account_query: Annotated[Callable, Depends(GetAccountQuery)]
 ) -> AccountBalanceSchema:
     return await get_account_query(account_id)
+
+
+@router.get("/{account_id}/transactions/", status_code=status.HTTP_200_OK)
+async def get_account_transaction_list(
+    account_id: int,
+    get_transaction_list_query: Annotated[
+        Callable, Depends(GetAccountTransactionListQuery)
+    ],
+) -> List[AccountTransactionSchema]:
+    return await get_transaction_list_query(account_id=account_id)

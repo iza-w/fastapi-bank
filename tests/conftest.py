@@ -10,11 +10,13 @@ from sqlalchemy.ext.asyncio import (
 )
 
 from app.domain.accounts.account_repository import IAccountRepository
+from app.domain.transactions.transaction_repository import ITransactionRepository
 from app.infrastructure.database import (
     Base,
     get_session,
 )
 from app.infrastructure.respositories.account_repository import SQLAlchemyAccountRepository
+from app.infrastructure.respositories.transaction_repository import SQLAlchemyTransactionRepository
 
 
 SQLALCHEMY_DATABASE_URL = "sqlite+aiosqlite://"
@@ -56,6 +58,9 @@ def app(async_session):
 
     app.dependency_overrides[get_session] = override_get_session
     app.dependency_overrides[IAccountRepository] = partial(SQLAlchemyAccountRepository)
+    app.dependency_overrides[ITransactionRepository] = partial(
+        SQLAlchemyTransactionRepository
+    )
 
     return app
 

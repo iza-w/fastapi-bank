@@ -9,8 +9,10 @@ from starlette.responses import JSONResponse
 
 from app.domain.accounts.account_repository import IAccountRepository
 from app.domain.accounts.exceptions import AccountDoesNotExist
+from app.domain.transactions.transaction_repository import ITransactionRepository
 from app.infrastructure.database import get_session
 from app.infrastructure.respositories.account_repository import SQLAlchemyAccountRepository
+from app.infrastructure.respositories.transaction_repository import SQLAlchemyTransactionRepository
 from app.presentation.endpoints.accounts import router as accounts_routes
 
 
@@ -51,6 +53,9 @@ def init_app():
 
     app.dependency_overrides[get_session] = get_session
     app.dependency_overrides[IAccountRepository] = partial(SQLAlchemyAccountRepository)
+    app.dependency_overrides[ITransactionRepository] = partial(
+        SQLAlchemyTransactionRepository
+    )
 
     handle_exceptions(app)
 
