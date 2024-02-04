@@ -21,6 +21,9 @@ migrate:
 downgrade:
 	alembic downgrade -1
 
+migrate-docker:
+	docker-compose exec api alembic upgrade head
+
 
 test:
 	pytest -v

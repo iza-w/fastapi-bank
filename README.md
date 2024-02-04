@@ -50,7 +50,17 @@ After you have docker and docker-compose installed, you can clone the repository
 Then you can run the application with:
 
 ```bash
-  docker compose up
+  docker compose up -d 
+  make migrate-docker  # run migrations
+```
+
+And that's it! The application is running on [http://localhost:8000](http://localhost:8000).
+
+
+To **stop** the application, you can run:
+
+```bash
+  docker compose down
 ```
 
 
