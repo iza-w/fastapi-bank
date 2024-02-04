@@ -7,11 +7,23 @@ from app.domain.accounts.exceptions import AccountDoesNotExist
 from app.infrastructure.respositories.account_repository import SQLAlchemyAccountRepository
 
 
-async def test_get_account(async_session):
+async def test_get__raises_account_when_account_does_not_exist(async_session):
     repository = SQLAlchemyAccountRepository(session=async_session)
 
     with pytest.raises(AccountDoesNotExist):
         await repository.get(account_id=1)
+
+
+async def test_get__returns_expected_account(async_session):
+    repository = SQLAlchemyAccountRepository(session=async_session)
+
+    async with async_session.begin():
+        account = Account(name="Jenny")
+        async_session.add(account)
+
+    result = await repository.get(account_id=account.id)
+
+    assert result == account
 
 
 async def test_get_list__returns_empty_list(async_session):
