@@ -5,7 +5,7 @@ from app.domain.accounts.schema import AccountCreateSchema
 
 
 async def test_create_account_command__creates_account_and_returns_it(
-    account_repository
+    account_repository,
 ):
     command = CreateAccountCommand(account_repository=account_repository)
 

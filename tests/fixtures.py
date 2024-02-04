@@ -1,4 +1,5 @@
 from decimal import Decimal
+
 import pytest
 
 from app.domain.accounts.account import Account
@@ -7,10 +8,12 @@ from app.infrastructure.respositories.transaction_repository import SQLAlchemyTr
 
 
 @pytest.fixture
-def account(account_repository):
+async def account(async_session, account_repository):
     account = Account(name="Jenny", balance=Decimal("100.00"))
-    account_repository.add(account)
-    account_repository.commit()
+
+    async with async_session.begin():
+        async_session.add(account)
+
     return account
 
 
