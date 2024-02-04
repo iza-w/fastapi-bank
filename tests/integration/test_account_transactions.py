@@ -93,6 +93,18 @@ async def test_deposit_to_account__returns_expected_response(
     assert response.json() == expected_response
 
 
+async def test_deposit_to_account__with_invalid_account_id_returns_not_found(
+    app, async_client
+):
+    response = await async_client.post(
+        app.url_path_for("deposit_to_account", account_id=1),
+        json={"amount": "100.00"},
+    )
+
+    assert response.status_code == status.HTTP_404_NOT_FOUND
+    assert response.json() == {"detail": "Account 1 does not exist."}
+
+
 @pytest.mark.parametrize(
     "amount, expected_status, expected_response",
     [
@@ -137,6 +149,18 @@ async def test_withdraw_from_account__returns_expected_response(
 
     assert response.status_code == expected_status
     assert response.json() == expected_response
+
+
+async def test_withdraw_from_account__with_invalid_account_id_returns_not_found(
+    app, async_client
+):
+    response = await async_client.post(
+        app.url_path_for("withdraw_from_account", account_id=1),
+        json={"amount": "100.00"},
+    )
+
+    assert response.status_code == status.HTTP_404_NOT_FOUND
+    assert response.json() == {"detail": "Account 1 does not exist."}
 
 
 async def test_transfer_between_accounts__returns_updated_accounts(
@@ -201,7 +225,7 @@ async def test_transfer_between_accounts__returns_400_when_insufficient_funds(
         (2, 4),
     ],
 )
-async def test_transfer_between_accounts__returns_404_when_account_does_not_exist(
+async def test_transfer_between_accounts__with_invalid_account_id_returns_not_found(
     app, async_client, async_session, from_account_id, to_account_id
 ):
     account = Account(id=1, name="Jenny")

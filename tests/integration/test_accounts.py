@@ -137,3 +137,12 @@ async def test_account_balance__returns_expected_balance(
     assert response.json() == {
         "balance": "100.00",
     }
+
+
+async def test_account_balance__with_invalid_id_returns_not_found(app, async_client):
+    response = await async_client.get(
+        app.url_path_for("get_account_balance", account_id=1)
+    )
+
+    assert response.status_code == status.HTTP_404_NOT_FOUND
+    assert response.json() == {"detail": "Account 1 does not exist."}
