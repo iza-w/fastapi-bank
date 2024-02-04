@@ -4,7 +4,7 @@ from fastapi import Depends
 
 from app.domain.accounts.account import Account
 from app.domain.accounts.account_repository import IAccountRepository
-from app.presentation.schema.account import AccountUpdateSchema
+from app.domain.accounts.schema import AccountUpdateSchema
 
 
 logger = logging.getLogger(__name__)

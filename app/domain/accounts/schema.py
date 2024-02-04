@@ -12,3 +12,11 @@ class AccountSchema(BaseModel):
     balance: Decimal
 
     model_config = ConfigDict(from_attributes=True)
+
+
+class AccountCreateSchema(BaseModel):
+    name: str
+
+
+class AccountUpdateSchema(BaseModel):
+    name: str

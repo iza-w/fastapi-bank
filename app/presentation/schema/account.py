@@ -6,14 +6,6 @@ from pydantic import (
 )
 
 
-class AccountCreateSchema(BaseModel):
-    name: str
-
-
-class AccountUpdateSchema(BaseModel):
-    name: str
-
-
 class AccountBalanceSchema(BaseModel):
     balance: Decimal
 

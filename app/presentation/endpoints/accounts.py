@@ -19,17 +19,17 @@ from app.application.commands.withdraw_transaction import CreateWithdrawTransact
 from app.application.queries.get_account import GetAccountQuery
 from app.application.queries.get_account_list import GetAccountListQuery
 from app.application.queries.get_account_transaction_list import GetAccountTransactionListQuery
-from app.domain.accounts.schema import AccountSchema
+from app.domain.accounts.schema import (
+    AccountCreateSchema,
+    AccountSchema,
+    AccountUpdateSchema,
+)
 from app.domain.transactions.schema import (
     DepositTransactionSchema,
     TransferTransactionSchema,
     WithdrawTransactionSchema,
 )
-from app.presentation.schema.account import (
-    AccountBalanceSchema,
-    AccountCreateSchema,
-    AccountUpdateSchema,
-)
+from app.presentation.schema.account import AccountBalanceSchema
 from app.presentation.schema.transaction import AccountTransactionSchema
 
 
